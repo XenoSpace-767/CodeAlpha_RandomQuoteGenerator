@@ -25,6 +25,8 @@ export default function QuoteCard({ quote, isFavorite, onToggleFavorite }) {
 
   return (
     <div
+      key={quote.id}
+      className="quote-animate"
       style={{
         backgroundColor: "#1e293b",
         padding: "2rem",
@@ -73,7 +75,6 @@ export default function QuoteCard({ quote, isFavorite, onToggleFavorite }) {
         — {quote.author}
       </h3>
 
-      {/* Action Buttons Row */}
       <div
         style={{
           display: "flex",
