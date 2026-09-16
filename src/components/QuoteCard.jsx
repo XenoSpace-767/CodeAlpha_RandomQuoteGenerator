@@ -1,4 +1,6 @@
-export default function QuoteCard() {
+export default function QuoteCard({ quote }) {
+  if (!quote) return null;
+
   return (
     <div
       style={{
@@ -23,7 +25,7 @@ export default function QuoteCard() {
           marginBottom: "1.5rem",
         }}
       >
-        Motivation
+        {quote.category}
       </span>
 
       <p
@@ -35,7 +37,7 @@ export default function QuoteCard() {
           marginBottom: "1rem",
         }}
       >
-        "The only way to do great work is to love what you do."
+        "{quote.text}"
       </p>
 
       <h3
@@ -45,7 +47,7 @@ export default function QuoteCard() {
           color: "#94a3b8",
         }}
       >
-        — Steve Jobs
+        — {quote.author}
       </h3>
     </div>
   );
