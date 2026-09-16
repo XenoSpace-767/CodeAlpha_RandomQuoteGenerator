@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import QuoteCard from "./components/QuoteCard";
 import CategorySelector from "./components/CategorySelector";
@@ -9,7 +9,17 @@ import { quotes } from "./data/quotes";
 export default function App() {
   const categories = ["All", ...new Set(quotes.map((q) => q.category))];
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [favorites, setFavorites] = useState([]);
+
+  // Load initial favorites from localStorage
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("quote_favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save favorites to localStorage whenever favorites state changes
+  useEffect(() => {
+    localStorage.setItem("quote_favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   const getFilteredQuotes = () => {
     if (selectedCategory === "All") return quotes;
