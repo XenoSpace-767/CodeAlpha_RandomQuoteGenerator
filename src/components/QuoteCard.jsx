@@ -1,5 +1,27 @@
-export default function QuoteCard({ quote }) {
+import { useState } from "react";
+
+export default function QuoteCard({ quote, isFavorite, onToggleFavorite }) {
+  const [copied, setCopied] = useState(false);
+
   if (!quote) return null;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`"${quote.text}" — ${quote.author}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Random Quote",
+        text: `"${quote.text}" — ${quote.author}`,
+      });
+    } else {
+      handleCopy();
+      alert("Quote copied to clipboard for sharing!");
+    }
+  };
 
   return (
     <div
@@ -45,10 +67,67 @@ export default function QuoteCard({ quote }) {
           fontSize: "1rem",
           fontWeight: "600",
           color: "#94a3b8",
+          marginBottom: "1.5rem",
         }}
       >
         — {quote.author}
       </h3>
+
+      {/* Action Buttons Row */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "1rem",
+          paddingTop: "1rem",
+          borderTop: "1px solid #334155",
+        }}
+      >
+        <button
+          onClick={handleCopy}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: "#334155",
+            color: "#f8fafc",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+          }}
+        >
+          {copied ? "Copied! ✅" : "Copy 📋"}
+        </button>
+
+        <button
+          onClick={() => onToggleFavorite(quote)}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: isFavorite ? "#ef4444" : "#334155",
+            color: "#f8fafc",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+          }}
+        >
+          {isFavorite ? "Favorited ❤️" : "Favorite 🤍"}
+        </button>
+
+        <button
+          onClick={handleShare}
+          style={{
+            padding: "0.5rem 1rem",
+            backgroundColor: "#334155",
+            color: "#f8fafc",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "0.9rem",
+          }}
+        >
+          Share 🔗
+        </button>
+      </div>
     </div>
   );
 }

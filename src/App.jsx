@@ -3,11 +3,13 @@ import Header from "./components/Header";
 import QuoteCard from "./components/QuoteCard";
 import CategorySelector from "./components/CategorySelector";
 import ActionButtons from "./components/ActionButtons";
+import Favorites from "./components/Favorites";
 import { quotes } from "./data/quotes";
 
 export default function App() {
   const categories = ["All", ...new Set(quotes.map((q) => q.category))];
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [favorites, setFavorites] = useState([]);
 
   const getFilteredQuotes = () => {
     if (selectedCategory === "All") return quotes;
@@ -43,16 +45,39 @@ export default function App() {
     setCurrentQuote(nextQuote);
   };
 
+  const handleToggleFavorite = (quote) => {
+    const exists = favorites.some((q) => q.id === quote.id);
+    if (exists) {
+      setFavorites(favorites.filter((q) => q.id !== quote.id));
+    } else {
+      setFavorites([...favorites, quote]);
+    }
+  };
+
+  const handleRemoveFavorite = (id) => {
+    setFavorites(favorites.filter((q) => q.id !== id));
+  };
+
+  const isCurrentFavorite = favorites.some((q) => q.id === currentQuote?.id);
+
   return (
-    <main>
+    <main style={{ paddingBottom: "2rem" }}>
       <Header />
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
       />
-      <QuoteCard quote={currentQuote} />
+      <QuoteCard
+        quote={currentQuote}
+        isFavorite={isCurrentFavorite}
+        onToggleFavorite={handleToggleFavorite}
+      />
       <ActionButtons onNewQuote={handleNewQuote} />
+      <Favorites
+        favorites={favorites}
+        onRemoveFavorite={handleRemoveFavorite}
+      />
     </main>
   );
 }
